@@ -1,6 +1,9 @@
 package fr.fasar.postform;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.fasar.postform.controller.RequestEntity;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -22,12 +25,17 @@ public class RecorderService {
     public static final Charset UTF_8 = Charset.forName("UTF8");
     private File output = null;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private ObjectMapper mapper;
 
-    public RecorderService() {
+    @Autowired
+    public RecorderService(
+            ObjectMapper mapper
+    ) {
+        this.mapper = mapper;
         Instant now = Instant.now();
         long forTomorrow = msBeforeTomorrowUTC(now);
         setOutputFile();
-        executor.schedule(this::setOutputFile, forTomorrow, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(this::setOutputFile, forTomorrow, 24*3600*1000L,TimeUnit.MILLISECONDS);
     }
 
     protected static long msBeforeTomorrowUTC(Instant now) {
@@ -64,4 +72,18 @@ public class RecorderService {
         FileUtils.write(output, lines, UTF_8, true);
     }
 
+    public CompletableFuture<Void> record(RequestEntity requestEntity) throws IOException {
+        CompletableFuture future = new CompletableFuture();
+        executor.execute(() -> {
+            try {
+                String s = mapper.writeValueAsString(requestEntity);
+                writeToFile(s + "\n");
+                future.complete(null);
+            } catch (Exception e) {
+                future.completeExceptionally(e);
+            }
+        });
+
+        return future;
+    }
 }
