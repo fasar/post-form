@@ -26,32 +26,25 @@ public class RecorderService {
     private File output = null;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private ObjectMapper mapper;
+    private PostFormConfiguration conf;
 
     @Autowired
     public RecorderService(
-            ObjectMapper mapper
+            ObjectMapper mapper,
+            PostFormConfiguration conf
     ) {
         this.mapper = mapper;
+        this.conf = conf;
         Instant now = Instant.now();
-        long forTomorrow = msBeforeTomorrowUTC(now);
+        long forTomorrow = Utils.msBeforeTomorrowUTC(now);
         setOutputFile();
         executor.scheduleAtFixedRate(this::setOutputFile, forTomorrow, 24*3600*1000L,TimeUnit.MILLISECONDS);
     }
 
-    protected static long msBeforeTomorrowUTC(Instant now) {
-        Instant tomorrow = now.plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS);
-        return tomorrow.toEpochMilli() - now.toEpochMilli();
-    }
-
-    protected static String dayOfYear() {
-        Instant now = Instant.now();
-        ZonedDateTime day = now.atZone(ZoneOffset.UTC);
-        return String.format("%04d%02d%02d", day.get(ChronoField.YEAR), day.get(ChronoField.MONTH_OF_YEAR), day.get(ChronoField.DAY_OF_MONTH));
-    }
 
     private void setOutputFile() {
-        String year = dayOfYear();
-        output = new File("out-"+year+".json");
+        String year = Utils.dayOfYear();
+        output = new File(conf.getBase(),"out-"+year+".json");
     }
 
     public CompletableFuture<Void> record(String line) {
@@ -72,7 +65,7 @@ public class RecorderService {
         FileUtils.write(output, lines, UTF_8, true);
     }
 
-    public CompletableFuture<Void> record(RequestEntity requestEntity) throws IOException {
+    public <T>  CompletableFuture<Void> record(T requestEntity) throws IOException {
         CompletableFuture future = new CompletableFuture();
         executor.execute(() -> {
             try {

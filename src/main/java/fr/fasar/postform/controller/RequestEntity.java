@@ -1,7 +1,6 @@
 package fr.fasar.postform.controller;
 
 import javax.servlet.http.Cookie;
-
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -10,28 +9,39 @@ import java.util.Objects;
 
 public class RequestEntity {
 
+    private String id;
     private Instant ts;
     private String method;
     private String remoteAddr;
     private String requestURL;
-    private String queryString;
-    private String contentType;
     private String characterEncoding;
-    private List<Cookie> cookies;
+    private Map<String, List<String>>  headers;
     private Map<String, String[]> parameterMap;
+    private List<PartEntity> parts;
     byte[] bytes;
 
-    public RequestEntity(Instant ts, String method, String remoteAddr, String requestURL, String queryString, String contentType, String characterEncoding, List<Cookie> cookies, Map<String, String[]> parameterMap, byte[] bytes) {
+    public RequestEntity(
+            String id, Instant ts, String method, String remoteAddr, String requestURL,
+            String characterEncoding, Map<String, String[]> parameterMap, Map<String, List<String>> headers,
+            List<PartEntity> parts, byte[] bytes) {
+        this.id = id;
         this.ts = ts;
         this.method = method;
         this.remoteAddr = remoteAddr;
         this.requestURL = requestURL;
-        this.queryString = queryString;
-        this.contentType = contentType;
         this.characterEncoding = characterEncoding;
-        this.cookies = cookies;
         this.parameterMap = parameterMap;
+        this.headers = headers;
+        this.parts = parts;
         this.bytes = bytes;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Instant getTs() {
@@ -66,22 +76,6 @@ public class RequestEntity {
         this.requestURL = requestURL;
     }
 
-    public String getQueryString() {
-        return queryString;
-    }
-
-    public void setQueryString(String queryString) {
-        this.queryString = queryString;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
     public String getCharacterEncoding() {
         return characterEncoding;
     }
@@ -90,20 +84,28 @@ public class RequestEntity {
         this.characterEncoding = characterEncoding;
     }
 
-    public List<Cookie> getCookies() {
-        return cookies;
-    }
-
-    public void setCookies(List<Cookie> cookies) {
-        this.cookies = cookies;
-    }
-
     public Map<String, String[]> getParameterMap() {
         return parameterMap;
     }
 
     public void setParameterMap(Map<String, String[]> parameterMap) {
         this.parameterMap = parameterMap;
+    }
+
+    public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, List<String>> headers) {
+        this.headers = headers;
+    }
+
+    public List<PartEntity> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<PartEntity> parts) {
+        this.parts = parts;
     }
 
     public byte[] getBytes() {
@@ -115,42 +117,42 @@ public class RequestEntity {
     }
 
     @Override
-    public String toString() {
-        return "RequestEntity{" +
-                "ts=" + ts +
-                ", method='" + method + '\'' +
-                ", remoteAddr='" + remoteAddr + '\'' +
-                ", requestURL='" + requestURL + '\'' +
-                ", queryString='" + queryString + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", characterEncoding='" + characterEncoding + '\'' +
-                ", cookies=" + cookies +
-                ", parameterMap=" + parameterMap +
-                ", bytes=" + Arrays.toString(bytes) +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestEntity that = (RequestEntity) o;
-        return Objects.equals(ts, that.ts) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(ts, that.ts) &&
                 Objects.equals(method, that.method) &&
                 Objects.equals(remoteAddr, that.remoteAddr) &&
                 Objects.equals(requestURL, that.requestURL) &&
-                Objects.equals(queryString, that.queryString) &&
-                Objects.equals(contentType, that.contentType) &&
                 Objects.equals(characterEncoding, that.characterEncoding) &&
-                Objects.equals(cookies, that.cookies) &&
+                Objects.equals(headers, that.headers) &&
                 Objects.equals(parameterMap, that.parameterMap) &&
+                Objects.equals(parts, that.parts) &&
                 Arrays.equals(bytes, that.bytes);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(ts, method, remoteAddr, requestURL, queryString, contentType, characterEncoding, cookies, parameterMap);
+        int result = Objects.hash(id, ts, method, remoteAddr, requestURL, characterEncoding, headers, parameterMap, parts);
         result = 31 * result + Arrays.hashCode(bytes);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestEntity{" +
+                "id='" + id + '\'' +
+                ", ts=" + ts +
+                ", method='" + method + '\'' +
+                ", remoteAddr='" + remoteAddr + '\'' +
+                ", requestURL='" + requestURL + '\'' +
+                ", characterEncoding='" + characterEncoding + '\'' +
+                ", headers=" + headers +
+                ", parameterMap=" + parameterMap +
+                ", parts=" + parts +
+                ", bytes=" + Arrays.toString(bytes) +
+                '}';
     }
 }
