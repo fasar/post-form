@@ -93,8 +93,8 @@ public class PostController {
      * @throws ControllerException
      * @throws IOException
      */
-    @RequestMapping("/post")
-    public String post(HttpServletRequest request) throws ControllerException, IOException, InterruptedException, ExecutionException, TimeoutException {
+    @RequestMapping("/{path:.*}")
+    public String post(@PathVariable String path, HttpServletRequest request) throws ControllerException, IOException, InterruptedException, ExecutionException, TimeoutException {
         long contentLength = request.getContentLengthLong();
         if (contentLength > maxBodyLength) {
             throw new ControllerException("Max body size is " + maxBodyLength + " bytes. Current body size is " + contentLength);

@@ -8,15 +8,15 @@
 <h1>Form 1 : raw</h1>
 
 <form action="/post" method="post">
-    <p>Idw: <input type="text" name="value1" /></p>
-    <p>Message: <input type="text" name="value1" /></p>
+    <p>Id: <input type="text" name="value1"  value="id1"/> <input type="text" name="value1"  value="id2"/> <input type="text" name="value1"  value="id3"/></p>
+    <p>Message: <input type="text" name="value2" /></p>
     <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
 </form>
 
 
 <h1>Form 2a : raw</h1>
 
-<form action="/post" method="post"enctype="multipart/form-data" >
+<form action="/post" method="post"enctype="multipart/form-data" onsubmit="return submitForm(this);">
     <p>Id1: <input type="text" name="id1" /></p>
     <p>Id2: <input type="text" name="id2" value="du texte 1" /></p>
     <p>Id3: <input type="text" name="id3" value="du texte 2" /></p>
