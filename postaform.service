@@ -1,0 +1,14 @@
+[Unit]
+Description=Post A Form - Server to log request on server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar post-form.jar
+WorkingDirectory=/home/postaform/server
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=postaform
+
+[Install]
+WantedBy=multi-user.target

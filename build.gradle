@@ -29,8 +29,10 @@ dependencies {
 	implementation  'commons-io:commons-io:2.6'
 	implementation  'commons-io:commons-io:2.6'
 	implementation 'commons-codec:commons-codec:1.12'
-	
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'junit:junit'
 }
+
+defaultTasks "bootJar"

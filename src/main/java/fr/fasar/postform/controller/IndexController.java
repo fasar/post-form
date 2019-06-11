@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
-    @GetMapping
+    @GetMapping("/try")
     public String index() {
         return "forms.html";
     }
