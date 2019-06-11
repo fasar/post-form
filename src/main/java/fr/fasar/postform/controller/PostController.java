@@ -6,7 +6,6 @@ import fr.fasar.postform.Utils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -148,7 +147,7 @@ public class PostController {
                 Set<String> alreadyParsedPart = parameterMap.keySet();
                 for (Part part : request.getParts()) {
                     String name = part.getName();
-                    if(name == null || alreadyParsedPart.contains(name)) {
+                    if (name == null || alreadyParsedPart.contains(name)) {
                         continue;
                     }
                     String contentType = part.getContentType();
@@ -171,7 +170,8 @@ public class PostController {
     }
 
     private String fileNameOf(String id, String filename) {
-        return id + "-" + filename;
+        String name = filename.replaceAll("\\W+", "");
+        return id + "-" + name;
     }
 
 
