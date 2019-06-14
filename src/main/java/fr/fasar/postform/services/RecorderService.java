@@ -1,6 +1,8 @@
-package fr.fasar.postform;
+package fr.fasar.postform.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.fasar.postform.PostFormConfiguration;
+import fr.fasar.postform.Utils;
 import fr.fasar.postform.controller.RequestEntity;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -78,5 +81,12 @@ public class RecorderService {
         });
 
         return future;
+    }
+
+    public Path getCurrentOutput() {
+        if (output != null) {
+            return output.toPath();
+        }
+        return null;
     }
 }

@@ -1,7 +1,7 @@
 package fr.fasar.postform.controller;
 
 import fr.fasar.postform.PostFormConfiguration;
-import fr.fasar.postform.RecorderService;
+import fr.fasar.postform.services.RecorderService;
 import fr.fasar.postform.Utils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
